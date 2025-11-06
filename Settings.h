@@ -5,18 +5,12 @@ void settingsMIDIOutCh();
 void settingsEncoderDir();
 void settingsUpdateParams();
 void settingsSendNotes();
-void settingsLEDintensity();
-void settingsSLIDERintensity();
-//void settingsCCType();
 
 int currentIndexMIDICh();
 int currentIndexMIDIOutCh();
 int currentIndexEncoderDir();
 int currentIndexUpdateParams();
 int currentIndexSendNotes();
-int currentIndexLEDintensity();
-int currentIndexSLIDERintensity();
-//int currentIndexCCType();
 
 void settingsMIDICh(int index, const char *value) {
   if (strcmp(value, "ALL") == 0) {
@@ -34,24 +28,6 @@ void settingsMIDIOutCh(int index, const char *value) {
     midiOutCh = atoi(value);
   }
   storeMidiOutCh(midiOutCh);
-}
-
-void settingsLEDintensity(int index, const char *value) {
-  if (strcmp(value, "Off") == 0) {
-    LEDintensity = 0;
-  } else {
-    LEDintensity = atoi(value);
-  }
-  storeLEDintensity(LEDintensity);
-}
-
-void settingsSLIDERintensity(int index, const char *value) {
-  if (strcmp(value, "Off") == 0) {
-    SLIDERintensity = 0;
-  } else {
-    SLIDERintensity = 1;
-  }
-  storeSLIDERintensity(SLIDERintensity);
 }
 
 void settingsEncoderDir(int index, const char *value) {
@@ -81,35 +57,12 @@ void settingsSendNotes(int index, const char *value) {
   storeSendNotes(sendNotes ? 1 : 0);
 }
 
-// void settingsCCType(int index, const char *value) {
-//   if (strcmp(value, "CC") == 0 ) {
-//     ccType = 0;
-//   } else {
-//     if (strcmp(value , "NRPN") == 0 ) {
-//       ccType = 1;
-//     } else {
-//       if (strcmp(value , "SYSEX") == 0 ) {
-//         ccType = 2;
-//       }
-//     }
-//   }
-//   storeCCType(ccType);
-// }
-
 int currentIndexMIDICh() {
   return getMIDIChannel();
 }
 
 int currentIndexMIDIOutCh() {
   return getMIDIOutCh();
-}
-
-int currentIndexLEDintensity() {
-  return getLEDintensity();
-}
-
-int currentIndexSLIDERintensity() {
-  return getSLIDERintensity();
 }
 
 int currentIndexEncoderDir() {
@@ -124,9 +77,6 @@ int currentIndexSendNotes() {
   return getSendNotes() ? 1 : 0;
 }
 
-// int currentIndexCCType() {
-//   return getCCType();
-// }
 
 // add settings to the circular buffer
 void setUpSettings() {

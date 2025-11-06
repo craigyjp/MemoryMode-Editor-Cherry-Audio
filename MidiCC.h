@@ -63,7 +63,7 @@
 #define CCoscSyncSW 64
 #define CClfoInvert 65
 #define CCcontourOsc3Amt 66
-#define CCarpSW 67
+#define CCarpOnSW 67
 
 
 

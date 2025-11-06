@@ -1,10 +1,7 @@
 //Values below are just for initialising and will be changed when synth is initialised to current panel controls & EEPROM settings
 byte midiChannel = MIDI_CHANNEL_OMNI;//(EEPROM)
 byte midiOutCh = 1;//(EEPROM)
-byte LEDintensity = 10;//(EEPROM)
-byte oldLEDintensity;
-int SLIDERintensity = 1;//(EEPROM)
-int oldSLIDERintensity;
+
 int learningDisplayNumber = 0;
 int learningNote = 0;
 boolean pot = false;
@@ -24,11 +21,12 @@ static unsigned long poly_timer = 0;
 static unsigned long mono_timer = 0;
 
 int readresdivider = 32;
-int resolutionFrig = 5;
+int resolutionFrig = 1;
 boolean recallPatchFlag = false;
 boolean learning = false;
 boolean noteArrived = false;
 int setCursorPos = 0;
+bool firstPatchLoaded = false;
 
 int CC_ON = 127;
 int CC_OFF = 127;
@@ -213,7 +211,7 @@ int voiceModToPW2 = 0;
 int voiceModToPW1 = 0;
 int voiceModToOsc2 = 0;
 int voiceModToOsc1 = 0;
-int arpSW = 0;
+int arpOnSW = 0;
 int arpHold = 0;
 int arpSync = 0;
 int multTrig = 0;

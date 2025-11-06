@@ -122,6 +122,7 @@ void renderCurrentParameterPage() {
         LCD.PCF8574_LCDSendString(myChar2);
       //}
   }
+  oldWhichParameter = "Trash";
 }
 
 void renderDeletePatchPage() {
