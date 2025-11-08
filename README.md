@@ -9,5 +9,6 @@ Early stages of development, basically all buttons and pots are working and I am
 Included are two USB-C MIDI interfaces to connect the editor to the PC or MAC if you do not have an inerface already, one interface is for MIDI and the other for HID commands required to control aspects opf the VST.
 
 * Things to do:-
-* Fix the poly/mono MultiTrigger settings
+* Add possible file names to the LCD display when loading
+* Add the VST percentage params to the small OLED.
 * Test all functionality
