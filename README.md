@@ -2,7 +2,7 @@
 
 Hardware editor for the Cherry Audio VST, it can be used as a hardware editor for the VST on a PC or MAC etc or with a built in PC it can be used as a standalone instrument.
 
-![Synth](photos/synth.jpg)
+![Synth](Photos/synth.jpg)
 
 Early stages of development, basically all buttons and pots are working and I am just tailoring the code to fit the functions of the VST.
 
