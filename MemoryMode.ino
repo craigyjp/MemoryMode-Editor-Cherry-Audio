@@ -173,6 +173,7 @@ void setup() {
   midiOutCh = getMIDIOutCh();
 
   recallPatch(patchNo);
+  delay(20);
   LCD.PCF8574_LCDClearScreen();
 }
 
@@ -627,10 +628,10 @@ void updateosc3Frequency() {
 
 void updateechoTime() {
   pot = true;
-    if (!recallPatchFlag) {
-      updateMOOGstyle(echoTimePREV, echoTime100, "     Echo Time");
-      //showCurrentParameterPage("Echo Time", String(echoTimestr) + " ms");
-    }
+  if (!recallPatchFlag) {
+    updateMOOGstyle(echoTimePREV, echoTime100, "     Echo Time");
+    //showCurrentParameterPage("Echo Time", String(echoTimestr) + " ms");
+  }
   midiCCOut(CCechoTime, echoTime);
 }
 
@@ -870,10 +871,10 @@ void updatedriftAmount() {
 
 void updatearpSpeed() {
   pot = true;
-    if (!recallPatchFlag) {
-      updateMOOGstyle(arpSpeedPREV, arpSpeed100, "     Arp Speed");
-      //showCurrentParameterPage("Arp Speed", String(arpSpeedstr) + " Hz");
-    }
+  if (!recallPatchFlag) {
+    updateMOOGstyle(arpSpeedPREV, arpSpeed100, "     Arp Speed");
+    //showCurrentParameterPage("Arp Speed", String(arpSpeedstr) + " Hz");
+  }
   midiCCOut(CCarpSpeed, arpSpeed);
 }
 
@@ -1087,6 +1088,12 @@ void updatearpSync() {
 }
 
 void updatemultTrig() {
+  sr.writePin(MULT_TRIG_LED, HIGH);  // LED on
+  midiCCOut(CCmultTrig, 127);
+  midiCCOut(CCmultTrig, 0);
+}
+
+void updatemultTrigSW() {
   pot = false;
   if (monoMode) {
     if (multTrig) {
@@ -1096,13 +1103,14 @@ void updatemultTrig() {
       sr.writePin(MULT_TRIG_LED, HIGH);  // LED on
       midiCCOut(CCmultTrig, 127);
       midiCCOut(CCmultTrig, 0);
-    } else {
+    }
+    if (!multTrig) {
       sr.writePin(MULT_TRIG_LED, LOW);  // LED off
       if (!recallPatchFlag) {
         showCurrentParameterPage("", "");
-        midiCCOut(CCmultTrig, 127);
-        midiCCOut(CCmultTrig, 0);
       }
+      midiCCOut(CCmultTrig, 127);
+      midiCCOut(CCmultTrig, 0);
     }
   }
   if (polyMode) {
@@ -1214,44 +1222,17 @@ void updateMonoSetting() {
       delay(500);
       midi6CCOut(MIDIEnter, 127);  // Confirm the setting
       monoPREV = mono;
+      polyMode = 0;
       polyPREV = 100;
     }
   }
-  updatemultTrig();
 }
-
-
-// void updatePolySetting() {
-//   if (polyMode == 1) {
-//     sr.writePin(POLY_LED, HIGH);  // LED on
-//     sr.writePin(MONO_LED, LOW);   // LED on
-//     sr.writePin(MULT_TRIG_LED, LOW);   // LED on
-//     multTrig = 0;
-//     if (!recallPatchFlag) {
-//       setPolyModeDisplay();
-//     }
-
-//     if (poly != polyPREV) {
-//       midi6CCOut(MIDIpolySW, 127);
-//       midi6CCOut(MIDIDownArrow, 127);
-//       for (int i = 1; i < poly; i++) {
-//         delay(500);
-//         midi6CCOut(MIDIDownArrow, 127);
-//       }
-//       delay(500);
-//       midi6CCOut(MIDIEnter, 127);
-//       polyPREV = poly;
-//       monoPREV = 100;
-//     }
-//   }
-// }
 
 void updatePolySetting() {
   if (polyMode) {
-    sr.writePin(POLY_LED, HIGH);      // LED on
-    sr.writePin(MONO_LED, LOW);       // LED off
-    sr.writePin(MULT_TRIG_LED, LOW);  // LED off
-    multTrig = 0;
+    sr.writePin(POLY_LED, HIGH);  // LED on
+    sr.writePin(MONO_LED, LOW);   // LED off
+    sr.writePin(MULT_TRIG_LED, LOW);
     if (!recallPatchFlag) {
       setPolyModeDisplay();
     }
@@ -1279,9 +1260,9 @@ void updatePolySetting() {
       midi6CCOut(MIDIEnter, 127);  // Confirm the setting
       polyPREV = poly;
       monoPREV = 100;
+      monoMode = 0;
     }
   }
-  updatemultTrig();
 }
 
 void updatemonoSW() {
@@ -1324,11 +1305,7 @@ void updatemonoExitSW() {
     polyMode = 0;
     monoFirstPress = 0;
     monoSW = 0;
-    multTrig = 0;
     mono_timer = 0;
-    recallPatchFlag = true;
-    updatemultTrig();
-    recallPatchFlag = false;
   }
 }
 
@@ -1375,10 +1352,6 @@ void updatepolyExitSW() {
     polyFirstPress = 0;
     polySW = 0;
     poly_timer = 0;
-    //multTrig = 0;
-    recallPatchFlag = true;
-    updatemultTrig();
-    recallPatchFlag = false;
   }
 }
 
@@ -2970,7 +2943,7 @@ void myControlChange(byte channel, byte control, int value) {
 
     case CCmultTrig:
       value = multTrig;
-      updatemultTrig();
+      updatemultTrigSW();
       break;
 
     case CCmonoSW:
@@ -3312,8 +3285,8 @@ void recallPatch(int patchNo) {
   allNotesOff();
 
   MIDI.sendProgramChange(0, midiOutCh);
-  usbMIDI.sendProgramChange(0, midiOutCh);
-  delay(50);
+  //usbMIDI.sendProgramChange(0, midiOutCh);
+  delay(100);
   recallPatchFlag = true;
   File patchFile = SD.open(String(patchNo).c_str());
   if (!patchFile) {
@@ -3369,8 +3342,8 @@ void setCurrentPatchData(String data[]) {
   arpHold = data[38].toInt();
   arpSync = data[39].toInt();
   multTrig = data[40].toInt();
-  mono = data[41].toInt();
-  poly = data[42].toInt();
+  monoMode = data[41].toInt();
+  polyMode = data[42].toInt();
   glideSW = data[43].toInt();
   maxVoices = data[44].toInt();
   octaveDown = data[45].toInt();
@@ -3447,8 +3420,8 @@ void setCurrentPatchData(String data[]) {
   vcfVelocity = data[116].toInt();
   vcfContourAmount = data[117].toInt();
   kbTrack = data[118].toInt();
-  polyMode = data[119].toInt();
-  monoMode = data[120].toInt();
+  poly = data[119].toInt();
+  mono = data[120].toInt();
   arpMode = data[121].toInt();
 
   lfoInitialAmountPREV = map(lfoInitialAmount, 0, 127, 0, 100);
@@ -3526,10 +3499,10 @@ void setCurrentPatchData(String data[]) {
   updateechoDamp();
   updateechoSpread();
   updateechoLevel();
-  updatenoise();
-  updateosc3Level();
-  updateosc2Level();
   updateosc1Level();
+  updateosc2Level();
+  updateosc3Level();
+  updatenoise();
   updatefilterCutoff();
   updateemphasis();
   updatevcfDecay();
@@ -3627,10 +3600,26 @@ void setCurrentPatchData(String data[]) {
   updatelowSW();
   updatekeyboardControlSW();
   updateoscSyncSW();
-  updatePolySetting();
-  updateMonoSetting();
+  
 
-  updatenumberOfVoicesSetting();
+  Serial.print("Poly Mode ");
+  Serial.println(polyMode);
+  Serial.print("Mono Mode ");
+  Serial.println(monoMode);
+
+  if (polyMode == 1) {
+    updatePolySetting();
+  }
+  if (monoMode == 1) {
+    updateMonoSetting();
+  }
+  if ((multTrig == 1) && (monoMode == 1)) {
+    updatemultTrig();
+  }
+  delay(200);
+  if ((polyMode == 1) || (mono > 3)) {
+    updatenumberOfVoicesSetting();
+  }
   delay(200);
   updatereverbType();
   delay(200);
@@ -3651,7 +3640,7 @@ String getCurrentPatchData() {
          + "," + String(phaserSpeed) + "," + String(echoSyncSW) + "," + String(ensembleRate) + "," + String(echoTime) + "," + String(echoRegen) + "," + String(echoDamp) + "," + String(echoLevel)
          + "," + String(reverbDecay) + "," + String(reverbDamp) + "," + String(reverbLevel) + "," + String(arpSpeed) + "," + String(arpRange) + "," + String(lfoDestOsc2) + "," + String(contourOsc3Amt)
          + "," + String(voiceModToFilter) + "," + String(voiceModToPW2) + "," + String(voiceModToPW1) + "," + String(masterTune) + "," + String(masterVolume) + "," + String(lfoInvert) + "," + String(voiceModToOsc2)
-         + "," + String(voiceModToOsc1) + "," + String(arpOnSW) + "," + String(arpHold) + "," + String(arpSync) + "," + String(multTrig) + "," + String(mono) + "," + String(poly)
+         + "," + String(voiceModToOsc1) + "," + String(arpOnSW) + "," + String(arpHold) + "," + String(arpSync) + "," + String(multTrig) + "," + String(monoMode) + "," + String(polyMode)
          + "," + String(glideSW) + "," + String(maxVoices) + "," + String(octaveDown) + "," + String(octaveNormal) + "," + String(octaveUp) + "," + String(chordMode) + "," + String(lfoSaw)
          + "," + String(lfoTriangle) + "," + String(lfoRamp) + "," + String(lfoSquare) + "," + String(lfoSampleHold) + "," + String(lfoKeybReset) + "," + String(wheelDC) + "," + String(lfoDestOsc3)
          + "," + String(lfoDestVCA) + "," + String(lfoDestPW1) + "," + String(lfoDestPW2) + "," + String(osc1_2) + "," + String(osc1_4) + "," + String(osc1_8) + "," + String(osc1_16)
@@ -3662,8 +3651,8 @@ String getCurrentPatchData() {
          + "," + String(lowSW) + "," + String(keyboardControlSW) + "," + String(oscSyncSW) + "," + String(lfoDestPW3) + "," + String(lfoDestFilter) + "," + String(uniDetune) + "," + String(ensembleDepth)
          + "," + String(echoSpread) + "," + String(noise) + "," + String(osc3Level) + "," + String(osc2Level) + "," + String(osc1Level) + "," + String(filterCutoff) + "," + String(emphasis)
          + "," + String(vcfDecay) + "," + String(vcfAttack) + "," + String(vcfSustain) + "," + String(vcfRelease) + "," + String(vcaDecay) + "," + String(vcaAttack) + "," + String(vcaSustain)
-         + "," + String(vcaRelease) + "," + String(driftAmount) + "," + String(vcaVelocity) + "," + String(vcfVelocity) + "," + String(vcfContourAmount) + "," + String(kbTrack) + "," + String(polyMode)
-         + "," + String(monoMode) + "," + String(arpMode);
+         + "," + String(vcaRelease) + "," + String(driftAmount) + "," + String(vcaVelocity) + "," + String(vcfVelocity) + "," + String(vcfContourAmount) + "," + String(kbTrack) + "," + String(poly)
+         + "," + String(mono) + "," + String(arpMode);
 }
 
 void checkMux() {
@@ -4315,8 +4304,22 @@ void midiCCOut(byte cc, byte value) {
         MIDI.sendControlChange(cc, value, midiOutCh);  //MIDI DIN is set to Out
         break;
     }
-    delay(1);
+    delay(2);
   }
+}
+
+void reinitialiseToPanel() {
+  //This sets the current patch to be the same as the current hardware panel state - all the pots
+  //The four button controls stay the same state
+  //This reinialises the previous hardware values to force a re-read
+  muxInput = 0;
+  for (int i = 0; i < MUXCHANNELS; i++) {
+    mux1ValuesPrev[i] = RE_READ;
+    mux2ValuesPrev[i] = RE_READ;
+    mux3ValuesPrev[i] = RE_READ;
+  }
+  patchName = INITPATCHNAME;
+  showPatchPage("Initial", "Panel Settings");
 }
 
 void checkSwitches() {
@@ -4329,6 +4332,7 @@ void checkSwitches() {
         state = DELETE;
         break;
     }
+    // SAVE button logic
   } else if (saveButton.numClicks() == 1) {
     switch (state) {
       case PARAMETER:
@@ -4482,20 +4486,6 @@ void checkSwitches() {
         break;
     }
   }
-}
-
-void reinitialiseToPanel() {
-  //This sets the current patch to be the same as the current hardware panel state - all the pots
-  //The four button controls stay the same state
-  //This reinialises the previous hardware values to force a re-read
-  muxInput = 0;
-  for (int i = 0; i < MUXCHANNELS; i++) {
-    mux1ValuesPrev[i] = RE_READ;
-    mux2ValuesPrev[i] = RE_READ;
-    mux3ValuesPrev[i] = RE_READ;
-  }
-  patchName = INITPATCHNAME;
-  showPatchPage("Initial", "Panel Settings");
 }
 
 void checkEncoder() {

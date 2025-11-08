@@ -215,6 +215,7 @@ int arpOnSW = 0;
 int arpHold = 0;
 int arpSync = 0;
 int multTrig = 0;
+int multTrigPREV = -1;
 int mono = 1;
 int monoSW = 0;
 int monoExitSW = 0;
