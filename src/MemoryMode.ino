@@ -231,6 +231,21 @@ void myAfterTouch(byte channel, byte pressure) {
   }
 }
 
+void updateLoadingMessages(String val1, String val2) {
+  updateLoadingMessages(val1.c_str(), val2.c_str());
+}
+
+// For char* (including string literals)
+void updateLoadingMessages(const char* val1, const char* val2) {
+  LCD.PCF8574_LCDClearLine(LCD.LCDLineNumberOne);
+  LCD.PCF8574_LCDClearLine(LCD.LCDLineNumberTwo);
+  LCD.PCF8574_LCDGOTO(LCD.LCDLineNumberOne, 0);
+  LCD.PCF8574_LCDSendString(const_cast<char*>(val1));
+  LCD.PCF8574_LCDGOTO(LCD.LCDLineNumberTwo, 0);
+  LCD.PCF8574_LCDSendString(const_cast<char*>(val2));
+  LCD_timer = millis();
+}
+
 void updateMOOGstyle(int PREVparam, int value, String WhichParameter) {
   LCD_timer = millis();
   if (WhichParameter.equals(oldWhichParameter)) {
@@ -3292,10 +3307,12 @@ void recallPatch(int patchNo) {
   if (!patchFile) {
     Serial.println("File not found");
   } else {
+    updateLoadingMessages("Loading Patch", "Please wait....");
     String data[NO_OF_PARAMS];  //Array of data read in
     recallPatchData(patchFile, data);
     setCurrentPatchData(data);
-    patchFile.close();
+    patchFile.close();;
+    updateLoadingMessages("Patch Loading", "Complete....");
   }
   recallPatchFlag = false;
 }
