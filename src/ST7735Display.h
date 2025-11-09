@@ -105,25 +105,43 @@ void renderCurrentPatchPage() {
 }
 
 void renderCurrentParameterPage() {
-  LCD_timer = millis();
-  switch (state) {
+  switch (state)
+  {
     case PARAMETER:
-        LCD.PCF8574_LCDClearLine(LCD.LCDLineNumberOne);
-        char myChar1[currentParameter.length() + 1];
-        currentParameter.toCharArray(myChar1, sizeof(myChar1));
-        LCD.PCF8574_LCDGOTO(LCD.LCDLineNumberOne, 0);
-        LCD.PCF8574_LCDSendString(myChar1);
-
-      //if (currentValue != prevcurrentValue) {
-        LCD.PCF8574_LCDClearLine(LCD.LCDLineNumberTwo);
-        char myChar2[currentValue.length() + 1];
-        currentValue.toCharArray(myChar2, sizeof(myChar2));
-        LCD.PCF8574_LCDGOTO(LCD.LCDLineNumberTwo, 0);
-        LCD.PCF8574_LCDSendString(myChar2);
-      //}
+      tft.fillScreen(ST7735_BLACK);
+      tft.setFont(&FreeSans12pt7b);
+      tft.setCursor(0, 53);
+      tft.setTextColor(ST7735_YELLOW);
+      tft.setTextSize(1);
+      tft.println(currentParameter);
+      tft.drawFastHLine(10, 62, tft.width() - 20, ST7735_RED);
+      tft.setCursor(1, 90);
+      tft.setTextColor(ST7735_WHITE);
+      tft.println(currentValue);
+      break;
   }
-  oldWhichParameter = "Trash";
 }
+
+// void renderCurrentParameterPage() {
+//   LCD_timer = millis();
+//   switch (state) {
+//     case PARAMETER:
+//         LCD.PCF8574_LCDClearLine(LCD.LCDLineNumberOne);
+//         char myChar1[currentParameter.length() + 1];
+//         currentParameter.toCharArray(myChar1, sizeof(myChar1));
+//         LCD.PCF8574_LCDGOTO(LCD.LCDLineNumberOne, 0);
+//         LCD.PCF8574_LCDSendString(myChar1);
+
+//       //if (currentValue != prevcurrentValue) {
+//         LCD.PCF8574_LCDClearLine(LCD.LCDLineNumberTwo);
+//         char myChar2[currentValue.length() + 1];
+//         currentValue.toCharArray(myChar2, sizeof(myChar2));
+//         LCD.PCF8574_LCDGOTO(LCD.LCDLineNumberTwo, 0);
+//         LCD.PCF8574_LCDSendString(myChar2);
+//       //}
+//   }
+//   oldWhichParameter = "Trash";
+// }
 
 void renderDeletePatchPage() {
   tft.fillScreen(ST7735_BLACK);

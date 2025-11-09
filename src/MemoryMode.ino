@@ -192,7 +192,7 @@ void myNoteOn(byte channel, byte note, byte velocity) {
   if (chordMemoryWait) {
     chordMemoryWait = false;
     sr.writePin(CHORD_MODE_LED, LOW);
-    showCurrentParameterPage("   CHORD MODE ON", "");
+    updateLoadingMessages("   CHORD MODE ON", "");
   }
 }
 
@@ -244,6 +244,7 @@ void updateLoadingMessages(const char* val1, const char* val2) {
   LCD.PCF8574_LCDGOTO(LCD.LCDLineNumberTwo, 0);
   LCD.PCF8574_LCDSendString(const_cast<char*>(val2));
   LCD_timer = millis();
+  oldWhichParameter = "Trash";
 }
 
 void updateMOOGstyle(int PREVparam, int value, String WhichParameter) {
@@ -340,22 +341,22 @@ void updatearpModePreset() {
 
 void arpModeNames() {
   if (arpMode == 1) {
-    showCurrentParameterPage("    MODE 1 - UP", "");
+    updateLoadingMessages("    MODE 1 - UP", "");
   }
   if (arpMode == 2) {
-    showCurrentParameterPage("   MODE 2 - DOWN", "");
+    updateLoadingMessages("   MODE 2 - DOWN", "");
   }
   if (arpMode == 3) {
-    showCurrentParameterPage("  MODE 3 - UP-DOWN", "");
+    updateLoadingMessages("  MODE 3 - UP-DOWN", "");
   }
   if (arpMode == 4) {
-    showCurrentParameterPage("MODE 4 - FIRST-LAST", "");
+    updateLoadingMessages("MODE 4 - FIRST-LAST", "");
   }
   if (arpMode == 5) {
-    showCurrentParameterPage("   MODE 5 - RANDOM", "");
+    updateLoadingMessages("   MODE 5 - RANDOM", "");
   }
   if (arpMode == 6) {
-    showCurrentParameterPage(" MODE 6 - AUTO TRIG", "");
+    updateLoadingMessages(" MODE 6 - AUTO TRIG", "");
   }
 }
 
@@ -468,23 +469,23 @@ void updatemodWheel() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(modWheelPREV, modWheel100, "  Mod Wheel Amount");
-    //showCurrentParameterPage("Mod Wheel Amount", String(modWheelstr) + " %");
+    showCurrentParameterPage("MW Amount", String(modWheelstr) + " %");
   }
   midiCCOut(CCmodWheel, modWheel);
 }
 
 void arpRangeDisplay() {
   if (arpRange == 1) {
-    showCurrentParameterPage("     ONE OCTAVE", "");
+    updateLoadingMessages("     ONE OCTAVE", "");
   }
   if (arpRange == 2) {
-    showCurrentParameterPage("     TWO OCTAVES", "");
+    updateLoadingMessages("     TWO OCTAVES", "");
   }
   if (arpRange == 3) {
-    showCurrentParameterPage("    THREE OCTAVES", "");
+    updateLoadingMessages("    THREE OCTAVES", "");
   }
   if (arpRange == 3) {
-    showCurrentParameterPage("    FOUR OCTAVES", "");
+    updateLoadingMessages("    FOUR OCTAVES", "");
   }
 }
 
@@ -492,7 +493,7 @@ void updateGlide() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(glidePREV, glide100, "     Glide Rate");
-    //showCurrentParameterPage("Glide", String(glidestr) + " mS");
+    showCurrentParameterPage("Glide", String(glidestr) + " mS");
   }
   midiCCOut(CCglide, glide);
 }
@@ -501,7 +502,7 @@ void updatephaserSpeed() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(phaserSpeedPREV, phaserSpeed100, "    Phaser Rate");
-    //showCurrentParameterPage("Phaser Rate", String(phaserSpeedstr) + " Hz");
+    showCurrentParameterPage("Phaser Rate", String(phaserSpeedstr) + " Hz");
   }
   midiCCOut(CCphaserSpeed, phaserSpeed);
 }
@@ -510,7 +511,7 @@ void updateensembleRate() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(ensembleRatePREV, ensembleRate100, "   Ensemble Rate");
-    //showCurrentParameterPage("Ensemble Rate", String(ensembleRatestr) + " Hz");
+    showCurrentParameterPage("Ensemble Rate", String(ensembleRatestr) + " Hz");
   }
   midiCCOut(CCensembleRate, ensembleRate);
 }
@@ -519,7 +520,7 @@ void updateensembleDepth() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(ensembleDepthPREV, ensembleDepth100, "   Ensemble Depth");
-    //showCurrentParameterPage("Ensemble Depth", String(ensembleDepthstr) + " %");
+    showCurrentParameterPage("Ens. Depth", String(ensembleDepthstr) + " %");
   }
   midiCCOut(CCensembleDepth, ensembleDepth);
 }
@@ -528,7 +529,7 @@ void updateuniDetune() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(uniDetunePREV, uniDetune100, "    Unison Detune");
-    //showCurrentParameterPage("Unison Detune", String(uniDetunestr) + " dB");
+    showCurrentParameterPage("Unison Detune", String(uniDetunestr) + " %");
   }
   midiCCOut(CCuniDetune, uniDetune);
 }
@@ -537,7 +538,7 @@ void updatebendDepth() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(bendDepthPREV, bendDepth100, "     Bend Depth");
-    //showCurrentParameterPage("Bend Depth", String(bendDepthstr) + " %");
+    showCurrentParameterPage("Bend Depth", String(bendDepthstr) + " SemiTones");
   }
   midiCCOut(CCbendDepth, bendDepth);
 }
@@ -546,7 +547,7 @@ void updatelfoOsc3() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(lfoOsc3PREV, lfoOsc3100, "  Osc3 Modulation");
-    //showCurrentParameterPage("Osc3 Modulation", String(lfoOsc3str) + " %");
+    showCurrentParameterPage("Osc3 Mod.", String(lfoOsc3str) + " %");
   }
   midiCCOut(CClfoOsc3, lfoOsc3);
 }
@@ -555,7 +556,7 @@ void updatelfoFilterContour() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(lfoFilterContourPREV, lfoFilterContour100, "   Filter Contour");
-    //showCurrentParameterPage("Filter Contour", String(lfoFilterContourstr) + " %");
+    showCurrentParameterPage("Filter Contour", String(lfoFilterContourstr) + " %");
   }
   midiCCOut(CClfoFilterContour, lfoFilterContour);
 }
@@ -564,7 +565,7 @@ void updatephaserDepth() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(phaserDepthPREV, phaserDepth100, "    Phaser Depth");
-    //showCurrentParameterPage("Phaser Depth", String(phaserDepthstr) + " %");
+    showCurrentParameterPage("Phaser Depth", String(phaserDepthstr) + " %");
   }
   midiCCOut(CCphaserDepth, phaserDepth);
 }
@@ -573,7 +574,7 @@ void updatelfoInitialAmount() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(lfoInitialAmountPREV, lfoInitialAmount100, " LFO Initial Amount");
-    //showCurrentParameterPage("LFO Initial Amount", String(lfoInitialAmountstr) + " %");
+    showCurrentParameterPage("LFO Init Amnt", String(lfoInitialAmountstr) + " %");
   }
   midiCCOut(CClfoInitialAmount, lfoInitialAmount);
 }
@@ -582,7 +583,7 @@ void updateosc2Frequency() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc2FrequencyPREV, osc2Frequency100, "   OSC2 Frequency");
-    //showCurrentParameterPage("OSC2 Frequency", String(osc2Frequencystr) + " Hz");
+    showCurrentParameterPage("OSC2 Freq.", String(osc2Frequencystr) + " Semi");
   }
   midiCCOut(CCosc2Frequency, osc2Frequency);
 }
@@ -591,7 +592,7 @@ void updateosc1PW() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc1PWPREV, osc1PW100, "  OSC1 Pulse Width");
-    //showCurrentParameterPage("OSC1 Pulse Width", String(osc1PWstr) + " %");
+    showCurrentParameterPage("OSC1 PW", String(osc1PWstr) + " %");
   }
   midiCCOut(CCosc1PW, osc1PW);
 }
@@ -600,7 +601,7 @@ void updateosc2PW() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc2PWPREV, osc2PW100, "  OSC2 Pulse Width");
-    //showCurrentParameterPage("OSC2 Pulse Width", String(osc2PWstr) + " %");
+    showCurrentParameterPage("OSC2 PW", String(osc2PWstr) + " %");
   }
   midiCCOut(CCosc2PW, osc2PW);
 }
@@ -609,7 +610,7 @@ void updateosc3PW() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc3PWPREV, osc3PW100, "  OSC3 Pulse Width");
-    //showCurrentParameterPage("OSC3 Pulse Width", String(osc3PWstr) + " %");
+    showCurrentParameterPage("OSC3 PW", String(osc3PWstr) + " %");
   }
   midiCCOut(CCosc3PW, osc3PW);
 }
@@ -618,7 +619,7 @@ void updatelfoSpeed() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(lfoSpeedPREV, lfoSpeed100, "      LFO Rate");
-    //showCurrentParameterPage("LFO Speed", String(lfoSpeedstr) + " Hz");
+    showCurrentParameterPage("LFO Speed", String(lfoSpeedstr) + " Hz");
   }
   midiCCOut(CClfoSpeed, lfoSpeed);
 }
@@ -627,7 +628,7 @@ void updateposc1PW() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc1PWPREV, osc1PW100, "  OSC1 Pulse Width");
-    //showCurrentParameterPage("Osc1 Pulse Width", String(osc1PWstr) + " %");
+    showCurrentParameterPage("Osc1 PW", String(osc1PWstr) + " %");
   }
   midiCCOut(CCosc1PW, osc1PW);
 }
@@ -636,7 +637,7 @@ void updateosc3Frequency() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc3FrequencyPREV, osc3Frequency100, "   OSC3 Frequency");
-    //showCurrentParameterPage("OSC3 Frequency", String(osc3Frequencystr) + " %");
+    showCurrentParameterPage("OSC3 Freq.", String(osc3Frequencystr) + " Semi");
   }
   midiCCOut(CCosc3Frequency, osc3Frequency);
 }
@@ -645,7 +646,7 @@ void updateechoTime() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(echoTimePREV, echoTime100, "     Echo Time");
-    //showCurrentParameterPage("Echo Time", String(echoTimestr) + " ms");
+    showCurrentParameterPage("Echo Time", String(echoTimestr) + " ms");
   }
   midiCCOut(CCechoTime, echoTime);
 }
@@ -654,7 +655,7 @@ void updateechoSpread() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(echoSpreadPREV, echoSpread100, "     Echo Spread");
-    //showCurrentParameterPage("Echo Spread", String(echoSpreadstr) + " ms");
+    showCurrentParameterPage("Echo Spread", String(echoSpreadstr) + " ms");
   }
   midiCCOut(CCechoSpread, echoSpread);
 }
@@ -663,7 +664,7 @@ void updateechoRegen() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(echoRegenPREV, echoRegen100, "     Echo Regen");
-    //showCurrentParameterPage("Echo Regen", String(echoRegenstr) + " %");
+    showCurrentParameterPage("Echo Regen", String(echoRegenstr) + " %");
   }
   midiCCOut(CCechoRegen, echoRegen);
 }
@@ -672,7 +673,7 @@ void updateechoDamp() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(echoDampPREV, echoDamp100, "     Echo Damp");
-    //showCurrentParameterPage("Echo Damp", String(echoDampstr) + " %");
+    showCurrentParameterPage("Echo Damp", String(echoDampstr) + " %");
   }
   midiCCOut(CCechoDamp, echoDamp);
 }
@@ -681,7 +682,7 @@ void updateechoLevel() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(echoLevelPREV, echoLevel100, "     Echo Level");
-    //showCurrentParameterPage("Echo Level", String(echoLevelstr) + " %");
+    showCurrentParameterPage("Echo Level", String(echoLevelstr) + " %");
   }
   midiCCOut(CCechoLevel, echoLevel);
 }
@@ -690,7 +691,7 @@ void updatenoise() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(noisePREV, noise100, "     Noise Level");
-    //showCurrentParameterPage("Noise Level", String(noisestr) + " %");
+    showCurrentParameterPage("Noise Level", String(noisestr) + " %");
   }
   midiCCOut(CCnoise, noise);
 }
@@ -699,7 +700,7 @@ void updateosc3Level() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc3LevelPREV, osc3Level100, "     OSC3 Level");
-    //showCurrentParameterPage("OSC3 Level", String(osc3Levelstr) + " %");
+    showCurrentParameterPage("OSC3 Level", String(osc3Levelstr) + " %");
   }
   midiCCOut(CCosc3Level, osc3Level);
 }
@@ -708,7 +709,7 @@ void updateosc2Level() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc2LevelPREV, osc2Level100, "     OSC2 Level");
-    //showCurrentParameterPage("OSC2 Level", String(osc2Levelstr) + " %");
+    showCurrentParameterPage("OSC2 Level", String(osc2Levelstr) + " %");
   }
   midiCCOut(CCosc2Level, osc2Level);
 }
@@ -717,7 +718,7 @@ void updateosc1Level() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(osc1LevelPREV, osc1Level100, "     OSC1 Level");
-    //showCurrentParameterPage("OSC1 Level", String(osc1Levelstr) + " %");
+    showCurrentParameterPage("OSC1 Level", String(osc1Levelstr) + " %");
   }
   midiCCOut(CCosc1Level, osc1Level);
 }
@@ -726,7 +727,7 @@ void updatefilterCutoff() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(filterCutoffPREV, filterCutoff100, "   Filter Cutoff");
-    //showCurrentParameterPage("Filter Cutoff", String(filterCutoffstr) + " Hz");
+    showCurrentParameterPage("Filter Cutoff", String(filterCutoffstr) + " Hz");
   }
   midiCCOut(CCfilterCutoff, filterCutoff);
 }
@@ -735,7 +736,7 @@ void updateemphasis() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(emphasisPREV, emphasis100, "   Filter Emphasis");
-    //showCurrentParameterPage("Filter Emphasis", String(emphasisstr) + " %");
+    showCurrentParameterPage("Filter Emphasis", String(emphasisstr) + " %");
   }
   midiCCOut(CCemphasis, emphasis);
 }
@@ -744,7 +745,7 @@ void updatevcfAttack() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcfAttackPREV, vcfAttack100, "   Filter Attack");
-    //showCurrentParameterPage("Filter Attack", String(vcfAttackstr) + " mS");
+    showCurrentParameterPage("Filter Attack", String(vcfAttackstr) + " mS");
   }
   midiCCOut(CCvcfAttack, vcfAttack);
 }
@@ -753,7 +754,7 @@ void updatevcfDecay() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcfDecayPREV, vcfDecay100, "   Filter Decay");
-    //showCurrentParameterPage("Filter Decay", String(vcfDecaystr) + " mS");
+    showCurrentParameterPage("Filter Decay", String(vcfDecaystr) + " mS");
   }
   midiCCOut(CCvcfDecay, vcfDecay);
 }
@@ -762,7 +763,7 @@ void updatevcfSustain() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcfSustainPREV, vcfSustain100, "   Filter Sustain");
-    //showCurrentParameterPage("Filter Sustain", String(vcfSustainstr) + " %");
+    showCurrentParameterPage("Filter Sustain", String(vcfSustainstr) + " %");
   }
   midiCCOut(CCvcfSustain, vcfSustain);
 }
@@ -771,7 +772,7 @@ void updatevcfRelease() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcfReleasePREV, vcfRelease100, "   Filter Release");
-    //showCurrentParameterPage("Filter Release", String(vcfReleasestr) + " mS");
+    showCurrentParameterPage("Filter Release", String(vcfReleasestr) + " mS");
   }
   midiCCOut(CCvcfRelease, vcfRelease);
 }
@@ -780,7 +781,7 @@ void updatevcfContourAmount() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcfContourAmountPREV, vcfContourAmount100, "Filter Contour Amnt");
-    //showCurrentParameterPage("Filter Contour Amnt", String(vcfContourAmountstr) + " %");
+    showCurrentParameterPage("Filt Cont Amt", String(vcfContourAmountstr) + " %");
   }
   midiCCOut(CCvcfContourAmount, vcfContourAmount);
 }
@@ -789,7 +790,7 @@ void updatekbTrack() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(kbTrackPREV, kbTrack100, " Keyboard Tracking");
-    //showCurrentParameterPage("keyboard Tracking", String(kbTrackstr) + " %");
+    showCurrentParameterPage("Key Track", String(kbTrackstr) + " %");
   }
   midiCCOut(CCkbTrack, kbTrack);
 }
@@ -798,7 +799,7 @@ void updatevcaAttack() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcaAttackPREV, vcaAttack100, "     Amp Attack");
-    //showCurrentParameterPage("Amp Attack", String(vcaAttackstr) + " mS");
+    showCurrentParameterPage("Amp Attack", String(vcaAttackstr) + " mS");
   }
   midiCCOut(CCvcaAttack, vcaAttack);
 }
@@ -807,7 +808,7 @@ void updatevcaDecay() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcaDecayPREV, vcaDecay100, "     Amp Decay");
-    //showCurrentParameterPage("Amp Decay", String(vcaDecaystr) + " mS");
+    showCurrentParameterPage("Amp Decay", String(vcaDecaystr) + " mS");
   }
   midiCCOut(CCvcaDecay, vcaDecay);
 }
@@ -816,7 +817,7 @@ void updatevcaSustain() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcaSustainPREV, vcaSustain100, "    Amp Sustain");
-    //showCurrentParameterPage("Amp Sustain", String(vcaSustainstr) + " %");
+    showCurrentParameterPage("Amp Sustain", String(vcaSustainstr) + " %");
   }
   midiCCOut(CCvcaSustain, vcaSustain);
 }
@@ -825,7 +826,7 @@ void updatevcaRelease() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcaReleasePREV, vcaRelease100, "    Amp Release");
-    //showCurrentParameterPage("Amp Release", String(vcaReleasestr) + " mS");
+    showCurrentParameterPage("Amp Release", String(vcaReleasestr) + " mS");
   }
   midiCCOut(CCvcaRelease, vcaRelease);
 }
@@ -834,7 +835,7 @@ void updatevcaVelocity() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcaVelocityPREV, vcaVelocity100, "   Amp Velocity");
-    //showCurrentParameterPage("Amp Velocity", String(vcaVelocitystr) + " %");
+    showCurrentParameterPage("Amp Velocity", String(vcaVelocitystr) + " %");
   }
   midiCCOut(CCvcaVelocity, vcaVelocity);
 }
@@ -843,7 +844,7 @@ void updatevcfVelocity() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(vcfVelocityPREV, vcfVelocity100, "  Filter Velocity");
-    //showCurrentParameterPage("Filter Velocity", String(vcfVelocitystr) + " %");
+    showCurrentParameterPage("Filter Velocity", String(vcfVelocitystr) + " %");
   }
   midiCCOut(CCvcfVelocity, vcfVelocity);
 }
@@ -852,7 +853,7 @@ void updatereverbDecay() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(reverbDecayPREV, reverbDecay100, "   Reverb Decay");
-    //showCurrentParameterPage("Reverb Decay", String(reverbDecaystr) + " %");
+    showCurrentParameterPage("Reverb Decay", String(reverbDecaystr) + " %");
   }
   midiCCOut(CCreverbDecay, reverbDecay);
 }
@@ -861,7 +862,7 @@ void updatereverbDamp() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(reverbDampPREV, reverbDamp100, "    Reverb Damp");
-    //showCurrentParameterPage("Reverb Damp", String(reverbDampstr) + " %");
+    showCurrentParameterPage("Reverb Damp", String(reverbDampstr) + " %");
   }
   midiCCOut(CCreverbDamp, reverbDamp);
 }
@@ -870,7 +871,7 @@ void updatereverbLevel() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(reverbLevelPREV, reverbLevel100, "     Reverb Mix");
-    //showCurrentParameterPage("Reverb Mix", String(reverbLevelstr) + " %");
+    showCurrentParameterPage("Reverb Mix", String(reverbLevelstr) + " %");
   }
   midiCCOut(CCreverbLevel, reverbLevel);
 }
@@ -879,7 +880,7 @@ void updatedriftAmount() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(driftAmountPREV, driftAmount100, "    Drift Amount");
-    //showCurrentParameterPage("Drift Amount", String(driftAmountstr) + " %");
+    showCurrentParameterPage("Drift Amount", String(driftAmountstr) + " %");
   }
   midiCCOut(CCdriftAmount, driftAmount);
 }
@@ -887,8 +888,8 @@ void updatedriftAmount() {
 void updatearpSpeed() {
   pot = true;
   if (!recallPatchFlag) {
-    updateMOOGstyle(arpSpeedPREV, arpSpeed100, "     Arp Speed");
-    //showCurrentParameterPage("Arp Speed", String(arpSpeedstr) + " Hz");
+    updateMOOGstyle(arpSpeedPREV, arpSpeed100, "     Arp Rate");
+    showCurrentParameterPage("Arp Rate", String(arpSpeedstr) + " Hz");
   }
   midiCCOut(CCarpSpeed, arpSpeed);
 }
@@ -897,7 +898,7 @@ void updatemasterTune() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(masterTunePREV, masterTune100, "    Master Tune");
-    //showCurrentParameterPage("Master Tune", String(masterTunestr) + " Semi");
+    showCurrentParameterPage("Master Tune", String(masterTunestr) + " Semi");
   }
   midiCCOut(CCmasterTune, masterTune);
 }
@@ -906,7 +907,7 @@ void updatemasterVolume() {
   pot = true;
   if (!recallPatchFlag) {
     updateMOOGstyle(masterVolumePREV, masterVolume100, "    Master Volume");
-    //showCurrentParameterPage("Master Volume", String(masterVolumestr) + " %");
+    showCurrentParameterPage("Master Volume", String(masterVolumestr) + " %");
   }
   midiCCOut(CCmasterVolume, masterVolume);
 }
@@ -916,7 +917,7 @@ void updatelfoInvert() {
   pot = false;
   if (lfoInvert) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("       INVERT", "");
+      updateLoadingMessages("       INVERT", "");
     }
     sr.writePin(LFO_INVERT_LED, HIGH);
     midiCCOut(CClfoInvert, 127);
@@ -924,7 +925,7 @@ void updatelfoInvert() {
   } else {
     sr.writePin(LFO_INVERT_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoInvert, 127);
       midiCCOut(CClfoInvert, 0);
     }
@@ -935,7 +936,7 @@ void updatecontourOsc3Amt() {
   pot = false;
   if (contourOsc3Amt) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("   CONTOURED OSC", "      3 AMOUNT");
+      updateLoadingMessages("   CONTOURED OSC", "      3 AMOUNT");
     }
     sr.writePin(CONT_OSC3_AMOUNT_LED, HIGH);
     midiCCOut(CCcontourOsc3Amt, 127);
@@ -943,7 +944,7 @@ void updatecontourOsc3Amt() {
   } else {
     sr.writePin(CONT_OSC3_AMOUNT_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCcontourOsc3Amt, 127);
       midiCCOut(CCcontourOsc3Amt, 0);
     }
@@ -954,7 +955,7 @@ void updatevoiceModToFilter() {
   pot = false;
   if (voiceModToFilter) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("VOICE MOD TO FILTER", "");
+      updateLoadingMessages("VOICE MOD TO FILTER", "");
     }
     sr.writePin(VOICE_MOD_DEST_FILTER_LED, HIGH);
     midiCCOut(CCvoiceModToFilter, 127);
@@ -962,7 +963,7 @@ void updatevoiceModToFilter() {
   } else {
     sr.writePin(VOICE_MOD_DEST_FILTER_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCvoiceModToFilter, 127);
       midiCCOut(CCvoiceModToFilter, 0);
     }
@@ -973,7 +974,7 @@ void updatevoiceModToPW2() {
   pot = false;
   if (voiceModToPW2) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("  VOICE MOD TO PW2", "");
+      updateLoadingMessages("  VOICE MOD TO PW2", "");
     }
     sr.writePin(VOICE_MOD_DEST_PW2_LED, HIGH);
     midiCCOut(CCvoiceModToPW2, 127);
@@ -981,7 +982,7 @@ void updatevoiceModToPW2() {
   } else {
     sr.writePin(VOICE_MOD_DEST_PW2_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCvoiceModToPW2, 127);
       midiCCOut(CCvoiceModToPW2, 0);
     }
@@ -992,7 +993,7 @@ void updatevoiceModToPW1() {
   pot = false;
   if (voiceModToPW1) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("  VOICE MOD TO PW1", "");
+      updateLoadingMessages("  VOICE MOD TO PW1", "");
     }
     sr.writePin(VOICE_MOD_DEST_PW1_LED, HIGH);
     midiCCOut(CCvoiceModToPW1, 127);
@@ -1000,7 +1001,7 @@ void updatevoiceModToPW1() {
   } else {
     sr.writePin(VOICE_MOD_DEST_PW1_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCvoiceModToPW1, 127);
       midiCCOut(CCvoiceModToPW1, 0);
     }
@@ -1011,7 +1012,7 @@ void updatevoiceModToOsc2() {
   pot = false;
   if (voiceModToOsc2) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage(" VOICE MOD TO OSC2", "");
+      updateLoadingMessages(" VOICE MOD TO OSC2", "");
     }
     sr.writePin(VOICE_MOD_DEST_OSC2_LED, HIGH);
     midiCCOut(CCvoiceModToOsc2, CC_ON);
@@ -1019,7 +1020,7 @@ void updatevoiceModToOsc2() {
   } else {
     sr.writePin(VOICE_MOD_DEST_OSC2_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCvoiceModToOsc2, 127);
       midiCCOut(CCvoiceModToOsc2, 0);
     }
@@ -1030,7 +1031,7 @@ void updatevoiceModToOsc1() {
   pot = false;
   if (voiceModToOsc1) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage(" VOICE MOD TO OSC1", "");
+      updateLoadingMessages(" VOICE MOD TO OSC1", "");
     }
     sr.writePin(VOICE_MOD_DEST_OSC1_LED, HIGH);  // LED on
     midiCCOut(CCvoiceModToOsc1, CC_ON);
@@ -1038,7 +1039,7 @@ void updatevoiceModToOsc1() {
   } else {
     sr.writePin(VOICE_MOD_DEST_OSC1_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCvoiceModToOsc1, 127);
       midiCCOut(CCvoiceModToOsc1, 0);
     }
@@ -1049,7 +1050,7 @@ void updatearpOnSW() {
   pot = false;
   if (arpOnSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("   ARPEGGIATOR ON", "");
+      updateLoadingMessages("   ARPEGGIATOR ON", "");
     }
     sr.writePin(ARP_ON_OFF_LED, HIGH);  // LED on
     midiCCOut(CCarpOnSW, 127);
@@ -1057,7 +1058,7 @@ void updatearpOnSW() {
   } else {
     sr.writePin(ARP_ON_OFF_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCarpOnSW, 127);
       midiCCOut(CCarpOnSW, 0);
     }
@@ -1068,7 +1069,7 @@ void updatearpHold() {
   pot = false;
   if (arpHold) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("  ARPEGGIATOR HOLD", "");
+      updateLoadingMessages("  ARPEGGIATOR HOLD", "");
     }
     sr.writePin(ARP_HOLD_LED, HIGH);  // LED on
     midiCCOut(CCarpHold, 127);
@@ -1076,7 +1077,7 @@ void updatearpHold() {
   } else {
     sr.writePin(ARP_HOLD_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCarpHold, 127);
       midiCCOut(CCarpHold, 0);
     }
@@ -1087,7 +1088,7 @@ void updatearpSync() {
   pot = false;
   if (arpSync) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("  ARPEGGIATOR SYNC", "");
+      updateLoadingMessages("  ARPEGGIATOR SYNC", "");
     }
     sr.writePin(ARP_SYNC_LED, HIGH);  // LED on
     midiCCOut(CCarpSync, 127);
@@ -1095,7 +1096,7 @@ void updatearpSync() {
   } else {
     sr.writePin(ARP_SYNC_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCarpSync, 127);
       midiCCOut(CCarpSync, 0);
     }
@@ -1113,7 +1114,7 @@ void updatemultTrigSW() {
   if (monoMode) {
     if (multTrig) {
       if (!recallPatchFlag) {
-        showCurrentParameterPage("  MULTIPLE TRIGGER", "");
+        updateLoadingMessages("  MULTIPLE TRIGGER", "");
       }
       sr.writePin(MULT_TRIG_LED, HIGH);  // LED on
       midiCCOut(CCmultTrig, 127);
@@ -1122,7 +1123,7 @@ void updatemultTrigSW() {
     if (!multTrig) {
       sr.writePin(MULT_TRIG_LED, LOW);  // LED off
       if (!recallPatchFlag) {
-        showCurrentParameterPage("", "");
+        updateLoadingMessages("", "");
       }
       midiCCOut(CCmultTrig, 127);
       midiCCOut(CCmultTrig, 0);
@@ -1169,7 +1170,7 @@ void updatenumberOfVoices() {
     myString += String(maxVoices);
     myString = myString + " VOICES";
     const char* myChar = myString.c_str();
-    showCurrentParameterPage(myChar, "");
+    updateLoadingMessages(myChar, "");
     midi6CCOut(MIDImaxVoicesSW, 127);
     midi6CCOut(MIDIDownArrow, 127);
     maxVoicesFirstPress++;
@@ -1181,7 +1182,7 @@ void updatenumberOfVoices() {
     myString += String(maxVoices);
     myString = myString + " VOICES";
     const char* myChar = myString.c_str();
-    showCurrentParameterPage(myChar, "");
+    updateLoadingMessages(myChar, "");
     midi6CCOut(MIDIDownArrow, 127);
     maxVoicesFirstPress++;
     maxVoices_timer = millis();
@@ -1196,7 +1197,7 @@ void updatemaxVoicesExitSW() {
     myString += String(maxVoices);
     myString = myString + " VOICES";
     const char* myChar = myString.c_str();
-    showCurrentParameterPage(myChar, "");
+    updateLoadingMessages(myChar, "");
 
     midi6CCOut(MIDIEnter, 127);
     maxVoicesFirstPress = 0;
@@ -1374,37 +1375,37 @@ void updatepolyExitSW() {
 
 void setPolyModeDisplay() {
   if (poly == 1) {
-    showCurrentParameterPage("POLY MODE 1 - CYCLIC", "");
+    updateLoadingMessages("POLY MODE 1 - CYCLIC", "");
   }
   if (poly == 2) {
-    showCurrentParameterPage("POLY MODE 2 - CYCLIC", "    WITH MEMORY");
+    updateLoadingMessages("POLY MODE 2 - CYCLIC", "    WITH MEMORY");
   }
   if (poly == 3) {
-    showCurrentParameterPage("POLY MODE 3 - RESET", "     TO VOICE 1");
+    updateLoadingMessages("POLY MODE 3 - RESET", "     TO VOICE 1");
   }
   if (poly == 4) {
-    showCurrentParameterPage("POLY MODE 4 - RESET", "    WITH MEMORY");
+    updateLoadingMessages("POLY MODE 4 - RESET", "    WITH MEMORY");
   }
 }
 
 void setMonoModeDisplay() {
   if (mono == 1) {
-    showCurrentParameterPage(" MONO MODE 1 - LAST", "   NOTE PRIORITY");
+    updateLoadingMessages(" MONO MODE 1 - LAST", "   NOTE PRIORITY");
   }
   if (mono == 2) {
-    showCurrentParameterPage(" MONO MODE 2 - LOW", "   NOTE PRIORITY");
+    updateLoadingMessages(" MONO MODE 2 - LOW", "   NOTE PRIORITY");
   }
   if (mono == 3) {
-    showCurrentParameterPage(" MONO MODE 3 - HIGH", "   NOTE PRIORITY");
+    updateLoadingMessages(" MONO MODE 3 - HIGH", "   NOTE PRIORITY");
   }
   if (mono == 4) {
-    showCurrentParameterPage("UNISON MODE 1 - LAST", "   NOTE PRIORITY");
+    updateLoadingMessages("UNISON MODE 1 - LAST", "   NOTE PRIORITY");
   }
   if (mono == 5) {
-    showCurrentParameterPage("UNISON MODE 2 - LOW", "   NOTE PRIORITY");
+    updateLoadingMessages("UNISON MODE 2 - LOW", "   NOTE PRIORITY");
   }
   if (mono == 6) {
-    showCurrentParameterPage("UNISON MODE 3 - HIGH", "   NOTE PRIORITY");
+    updateLoadingMessages("UNISON MODE 3 - HIGH", "   NOTE PRIORITY");
   }
 }
 
@@ -1479,7 +1480,7 @@ void updateglideSW() {
   pot = false;
   if (glideSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("      GLIDE ON", "");
+      updateLoadingMessages("      GLIDE ON", "");
     }
     sr.writePin(GLIDE_LED, HIGH);  // LED on
     midiCCOut(CCglideSW, 127);
@@ -1487,7 +1488,7 @@ void updateglideSW() {
   } else {
     sr.writePin(GLIDE_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCglideSW, 127);
       midiCCOut(CCglideSW, 0);
     }
@@ -1531,7 +1532,7 @@ void updatechordMode() {
   pot = false;
   if (chordMode) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("   LEARNING CHORD", "");
+      updateLoadingMessages("   LEARNING CHORD", "");
       chordMemoryWait = true;
       learn_timer = millis();
     }
@@ -1541,7 +1542,7 @@ void updatechordMode() {
   } else {
     sr.writePin(CHORD_MODE_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("   CHORD MODE OFF", "");
+      updateLoadingMessages("   CHORD MODE OFF", "");
       midiCCOut(CCchordMode, 127);
       midiCCOut(CCchordMode, 0);
       chordMemoryWait = false;
@@ -1553,7 +1554,7 @@ void updatelfoSaw() {
   pot = false;
   if (lfoSaw) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("      LFO SAW", "");
+      updateLoadingMessages("      LFO SAW", "");
     }
     sr.writePin(LFO_TRIANGLE_LED, LOW);
     sr.writePin(LFO_SAW_LED, HIGH);
@@ -1572,7 +1573,7 @@ void updatelfoTriangle() {
   pot = false;
   if (lfoTriangle) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("    LFO TRIANGLE", "");
+      updateLoadingMessages("    LFO TRIANGLE", "");
     }
     sr.writePin(LFO_TRIANGLE_LED, HIGH);
     sr.writePin(LFO_SAW_LED, LOW);
@@ -1591,7 +1592,7 @@ void updatelfoRamp() {
   pot = false;
   if (lfoRamp) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("      LFO RAMP", "");
+      updateLoadingMessages("      LFO RAMP", "");
     }
     sr.writePin(LFO_TRIANGLE_LED, LOW);
     sr.writePin(LFO_SAW_LED, LOW);
@@ -1610,7 +1611,7 @@ void updatelfoSquare() {
   pot = false;
   if (lfoSquare) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     LFO SQUARE", "");
+      updateLoadingMessages("     LFO SQUARE", "");
     }
     sr.writePin(LFO_TRIANGLE_LED, LOW);
     sr.writePin(LFO_SAW_LED, LOW);
@@ -1629,7 +1630,7 @@ void updatelfoSampleHold() {
   pot = false;
   if (lfoSampleHold) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("      LFO S&H", "");
+      updateLoadingMessages("      LFO S&H", "");
     }
     sr.writePin(LFO_TRIANGLE_LED, LOW);
     sr.writePin(LFO_SAW_LED, LOW);
@@ -1648,7 +1649,7 @@ void updatelfoSyncSW() {
   pot = false;
   if (lfoSyncSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("      LFO SYNC", "");
+      updateLoadingMessages("      LFO SYNC", "");
     }
     sr.writePin(LFO_SYNC_LED, HIGH);  // LED on
     midiCCOut(CClfoSyncSW, 127);
@@ -1656,7 +1657,7 @@ void updatelfoSyncSW() {
   } else {
     sr.writePin(LFO_SYNC_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoSyncSW, 127);
       midiCCOut(CClfoSyncSW, 0);
     }
@@ -1667,7 +1668,7 @@ void updatelfoKeybReset() {
   pot = false;
   if (lfoKeybReset) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage(" LFO KEYBOARD RESET", "");
+      updateLoadingMessages(" LFO KEYBOARD RESET", "");
     }
     sr.writePin(LFO_KEYB_RESET_LED, HIGH);  // LED on
     midiCCOut(CClfoKeybReset, 127);
@@ -1675,7 +1676,7 @@ void updatelfoKeybReset() {
   } else {
     sr.writePin(LFO_KEYB_RESET_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoKeybReset, 127);
       midiCCOut(CClfoKeybReset, 0);
     }
@@ -1691,7 +1692,7 @@ void updatewheelDC() {
   pot = false;
   if (wheelDC) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage(" MOD WHEEL SENDS DC", "");
+      updateLoadingMessages(" MOD WHEEL SENDS DC", "");
     }
     sr.writePin(DC_LED, HIGH);  // LED on
     midiCCOut(CCwheelDC, 127);
@@ -1699,7 +1700,7 @@ void updatewheelDC() {
   } else {
     sr.writePin(DC_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCwheelDC, 127);
       midiCCOut(CCwheelDC, 0);
     }
@@ -1710,7 +1711,7 @@ void updatelfoDestOsc1() {
   pot = false;
   if (lfoDestOsc1) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     LFO TO OSC1", "");
+      updateLoadingMessages("     LFO TO OSC1", "");
     }
     sr.writePin(LFO_DEST_OSC1_LED, HIGH);  // LED on
     midiCCOut(CClfoDestOsc1, 127);
@@ -1718,7 +1719,7 @@ void updatelfoDestOsc1() {
   } else {
     sr.writePin(LFO_DEST_OSC1_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoDestOsc1, 127);
       midiCCOut(CClfoDestOsc1, 0);
     }
@@ -1729,7 +1730,7 @@ void updatelfoDestOsc2() {
   pot = false;
   if (lfoDestOsc2) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     LFO TO OSC2", "");
+      updateLoadingMessages("     LFO TO OSC2", "");
     }
     sr.writePin(LFO_DEST_OSC2_LED, HIGH);  // LED on
     midiCCOut(CClfoDestOsc2, 127);
@@ -1737,7 +1738,7 @@ void updatelfoDestOsc2() {
   } else {
     sr.writePin(LFO_DEST_OSC2_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoDestOsc2, 127);
       midiCCOut(CClfoDestOsc2, 0);
     }
@@ -1748,7 +1749,7 @@ void updatelfoDestOsc3() {
   pot = false;
   if (lfoDestOsc3) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     LFO TO OSC3", "");
+      updateLoadingMessages("     LFO TO OSC3", "");
     }
     sr.writePin(LFO_DEST_OSC3_LED, HIGH);  // LED on
     midiCCOut(CClfoDestOsc3, 127);
@@ -1756,7 +1757,7 @@ void updatelfoDestOsc3() {
   } else {
     sr.writePin(LFO_DEST_OSC3_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoDestOsc3, 127);
       midiCCOut(CClfoDestOsc3, 0);
     }
@@ -1767,7 +1768,7 @@ void updatelfoDestVCA() {
   pot = false;
   if (lfoDestVCA) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     LFO TO VCA", "");
+      updateLoadingMessages("     LFO TO VCA", "");
     }
     sr.writePin(LFO_DEST_VCA_LED, HIGH);  // LED on
     midiCCOut(CClfoDestVCA, 127);
@@ -1775,7 +1776,7 @@ void updatelfoDestVCA() {
   } else {
     sr.writePin(LFO_DEST_VCA_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoDestVCA, 127);
       midiCCOut(CClfoDestVCA, 0);
     }
@@ -1786,7 +1787,7 @@ void updatelfoDestPW1() {
   pot = false;
   if (lfoDestPW1) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     LFO TO PW1", "");
+      updateLoadingMessages("     LFO TO PW1", "");
     }
     sr.writePin(LFO_DEST_PW1_LED, HIGH);  // LED on
     midiCCOut(CClfoDestPW1, 127);
@@ -1794,7 +1795,7 @@ void updatelfoDestPW1() {
   } else {
     sr.writePin(LFO_DEST_PW1_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoDestPW1, 127);
       midiCCOut(CClfoDestPW1, 0);
     }
@@ -1805,7 +1806,7 @@ void updatelfoDestPW2() {
   pot = false;
   if (lfoDestPW2) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     LFO TO PW2", "");
+      updateLoadingMessages("     LFO TO PW2", "");
     }
     sr.writePin(LFO_DEST_PW2_LED, HIGH);  // LED on
     midiCCOut(CClfoDestPW2, 127);
@@ -1813,7 +1814,7 @@ void updatelfoDestPW2() {
   } else {
     sr.writePin(LFO_DEST_PW2_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoDestPW2, 127);
       midiCCOut(CClfoDestPW2, 0);
     }
@@ -2054,7 +2055,7 @@ void updateslopeSW() {
   pot = false;
   if (slopeSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("FOUR POLE (24DB/OCT)", "");
+      updateLoadingMessages("FOUR POLE (24DB/OCT)", "");
     }
     sr.writePin(SLOPE_GREEN_LED, LOW);  // LED on
     sr.writePin(SLOPE_RED_LED, HIGH);   // LED on
@@ -2064,7 +2065,7 @@ void updateslopeSW() {
     sr.writePin(SLOPE_GREEN_LED, HIGH);  // LED on
     sr.writePin(SLOPE_RED_LED, LOW);     // LED on
     if (!recallPatchFlag) {
-      showCurrentParameterPage("TWO POLE (12DB/OCT)", "");
+      updateLoadingMessages("TWO POLE (12DB/OCT)", "");
       midiCCOut(CCslopeSW, 127);
       midiCCOut(CCslopeSW, 0);
     }
@@ -2075,7 +2076,7 @@ void updateechoSW() {
   pot = false;
   if (echoSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("      ECHO ON", "");
+      updateLoadingMessages("      ECHO ON", "");
     }
     sr.writePin(ECHO_ON_OFF_LED, HIGH);  // LED on
     midiCCOut(CCechoSW, 127);
@@ -2083,7 +2084,7 @@ void updateechoSW() {
   } else {
     sr.writePin(ECHO_ON_OFF_LED, LOW);  // LED on
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCechoSW, 127);
       midiCCOut(CCechoSW, 0);
     }
@@ -2094,7 +2095,7 @@ void updateechoSyncSW() {
   pot = false;
   if (echoSyncSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("    ECHO SYNC ON", "");
+      updateLoadingMessages("    ECHO SYNC ON", "");
     }
     sr.writePin(ECHO_SYNC_LED, HIGH);  // LED on
     midiCCOut(CCechoSyncSW, 127);
@@ -2102,7 +2103,7 @@ void updateechoSyncSW() {
   } else {
     sr.writePin(ECHO_SYNC_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCechoSyncSW, 127);
       midiCCOut(CCechoSyncSW, 0);
     }
@@ -2113,14 +2114,14 @@ void updatereleaseSW() {
   pot = false;
   if (releaseSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     RELEASE ON", "");
+      updateLoadingMessages("     RELEASE ON", "");
     }
     sr.writePin(RELEASE_LED, HIGH);  // LED on
     midiCCOut(CCreleaseSW, 127);
   } else {
     sr.writePin(RELEASE_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCreleaseSW, 127);
     }
   }
@@ -2130,14 +2131,14 @@ void updatekeyboardFollowSW() {
   pot = false;
   if (keyboardFollowSW == 1) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("   KEYBOARD FOLLOW", "");
+      updateLoadingMessages("   KEYBOARD FOLLOW", "");
     }
     sr.writePin(KEYBOARD_FOLLOW_LED, HIGH);  // LED on
     midiCCOut(CCkeyboardFollowSW, 127);
   } else {
     sr.writePin(KEYBOARD_FOLLOW_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCkeyboardFollowSW, 127);
     }
   }
@@ -2147,14 +2148,14 @@ void updateunconditionalContourSW() {
   pot = false;
   if (unconditionalContourSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("   UNCONDITIONAL", "    CONTOUR ON");
+      updateLoadingMessages("   UNCONDITIONAL", "    CONTOUR ON");
     }
     sr.writePin(UNCONDITIONAL_CONTOUR_LED, HIGH);  // LED on
     midiCCOut(CCunconditionalContourSW, 127);
   } else {
     sr.writePin(UNCONDITIONAL_CONTOUR_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCunconditionalContourSW, 127);
     }
   }
@@ -2164,14 +2165,14 @@ void updatereturnSW() {
   pot = false;
   if (returnSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage(" RETURN TO ZERO ON", "");
+      updateLoadingMessages(" RETURN TO ZERO ON", "");
     }
     sr.writePin(RETURN_TO_ZERO_LED, HIGH);  // LED on
     midiCCOut(CCreturnSW, 127);
   } else {
     sr.writePin(RETURN_TO_ZERO_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCreturnSW, 127);
     }
   }
@@ -2181,7 +2182,7 @@ void updatereverbSW() {
   pot = false;
   if (reverbSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("    REVERB ON", "");
+      updateLoadingMessages("    REVERB ON", "");
     }
     sr.writePin(REVERB_ON_OFF_LED, HIGH);  // LED on
     midiCCOut(CCreverbSW, 127);
@@ -2189,7 +2190,7 @@ void updatereverbSW() {
   } else {
     sr.writePin(REVERB_ON_OFF_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCreverbSW, 127);
       midiCCOut(CCreverbSW, 0);
     }
@@ -2219,13 +2220,13 @@ void updatereverbTypeSW() {
     sr.writePin(REVERB_TYPE_LED, HIGH);  // LED on
     if (!recallPatchFlag) {
       if (reverbType == 1) {
-        showCurrentParameterPage("     ROOM REVERB", "");
+        updateLoadingMessages("     ROOM REVERB", "");
       }
       if (reverbType == 2) {
-        showCurrentParameterPage("     PLATE REVERB", "");
+        updateLoadingMessages("     PLATE REVERB", "");
       }
       if (reverbType == 3) {
-        showCurrentParameterPage("     HALL REVERB", "");
+        updateLoadingMessages("     HALL REVERB", "");
       }
     }
     midi6CCOut(MIDIreverbTypeSW, 127);
@@ -2238,13 +2239,13 @@ void updatereverbTypeSW() {
     }
     if (!recallPatchFlag) {
       if (reverbType == 1) {
-        showCurrentParameterPage("     ROOM REVERB", "");
+        updateLoadingMessages("     ROOM REVERB", "");
       }
       if (reverbType == 2) {
-        showCurrentParameterPage("     PLATE REVERB", "");
+        updateLoadingMessages("     PLATE REVERB", "");
       }
       if (reverbType == 3) {
-        showCurrentParameterPage("     HALL REVERB", "");
+        updateLoadingMessages("     HALL REVERB", "");
       }
     }
     midi6CCOut(MIDIDownArrow, 127);
@@ -2258,13 +2259,13 @@ void updatereverbTypeExitSW() {
   if (reverbTypeExitSW) {
     if (!recallPatchFlag) {
       if (reverbType == 1) {
-        showCurrentParameterPage("     ROOM REVERB", "");
+        updateLoadingMessages("     ROOM REVERB", "");
       }
       if (reverbType == 2) {
-        showCurrentParameterPage("     PLATE REVERB", "");
+        updateLoadingMessages("     PLATE REVERB", "");
       }
       if (reverbType == 3) {
-        showCurrentParameterPage("     HALL REVERB", "");
+        updateLoadingMessages("     HALL REVERB", "");
       }
     }
     midi6CCOut(MIDIEnter, 127);
@@ -2280,7 +2281,7 @@ void updatelimitSW() {
   pot = false;
   if (limitSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("        LIMIT", "");
+      updateLoadingMessages("        LIMIT", "");
     }
     sr.writePin(LIMIT_LED, HIGH);  // LED on
     midiCCOut(CClimitSW, 127);
@@ -2288,7 +2289,7 @@ void updatelimitSW() {
   } else {
     sr.writePin(LIMIT_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClimitSW, 127);
       midiCCOut(CClimitSW, 0);
     }
@@ -2299,7 +2300,7 @@ void updatemodernSW() {
   pot = false;
   if (modernSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("    MODERN MODE", "");
+      updateLoadingMessages("    MODERN MODE", "");
     }
     sr.writePin(MODERN_LED, HIGH);  // LED on
     midiCCOut(CCmodernSW, 127);
@@ -2307,7 +2308,7 @@ void updatemodernSW() {
   } else {
     sr.writePin(MODERN_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("    VINTAGE MODE", "");
+      updateLoadingMessages("    VINTAGE MODE", "");
       midiCCOut(CCmodernSW, 127);
       midiCCOut(CCmodernSW, 0);
     }
@@ -2370,7 +2371,7 @@ void updateensembleSW() {
   pot = false;
   if (ensembleSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     ENSEMBLE ON", "");
+      updateLoadingMessages("     ENSEMBLE ON", "");
     }
     sr.writePin(ENSEMBLE_LED, HIGH);  // LED on
     midiCCOut(CCensembleSW, 127);
@@ -2378,7 +2379,7 @@ void updateensembleSW() {
   } else {
     sr.writePin(ENSEMBLE_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCensembleSW, 127);
       midiCCOut(CCensembleSW, 0);
     }
@@ -2389,7 +2390,7 @@ void updatelowSW() {
   pot = false;
   if (lowSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("   OSC3 LOW FREQ", "");
+      updateLoadingMessages("   OSC3 LOW FREQ", "");
     }
     sr.writePin(LOW_LED, HIGH);  // LED on
     midiCCOut(CClowSW, 127);
@@ -2397,7 +2398,7 @@ void updatelowSW() {
   } else {
     sr.writePin(LOW_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClowSW, 127);
       midiCCOut(CClowSW, 0);
     }
@@ -2408,7 +2409,7 @@ void updatekeyboardControlSW() {
   pot = false;
   if (keyboardControlSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("OSC3 KEYBOARD CONTROL", "");
+      updateLoadingMessages("OSC3 KEYBOARD CONTROL", "");
     }
     sr.writePin(KEYBOARD_CONTROL_LED, HIGH);  // LED on
     midiCCOut(CCkeyboardControlSW, 127);
@@ -2416,7 +2417,7 @@ void updatekeyboardControlSW() {
   } else {
     sr.writePin(KEYBOARD_CONTROL_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCkeyboardControlSW, 127);
       midiCCOut(CCkeyboardControlSW, 0);
     }
@@ -2427,7 +2428,7 @@ void updateoscSyncSW() {
   pot = false;
   if (oscSyncSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("  OSC SYNC 2 TO 1", "");
+      updateLoadingMessages("  OSC SYNC 2 TO 1", "");
     }
     sr.writePin(OSC_SYNC_LED, HIGH);  // LED on
     midiCCOut(CCoscSyncSW, 127);
@@ -2435,7 +2436,7 @@ void updateoscSyncSW() {
   } else {
     sr.writePin(OSC_SYNC_LED, LOW);  // LED off
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCoscSyncSW, 127);
       midiCCOut(CCoscSyncSW, 0);
     }
@@ -2446,7 +2447,7 @@ void updatevoiceModDestVCA() {
   pot = false;
   if (voiceModDestVCA) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("  VOICE MOD TO AMP", "");
+      updateLoadingMessages("  VOICE MOD TO AMP", "");
     }
     sr.writePin(VOICE_MOD_DEST_VCA_LED, HIGH);
     midiCCOut(CCvoiceModDestVCA, 127);
@@ -2454,7 +2455,7 @@ void updatevoiceModDestVCA() {
   } else {
     sr.writePin(VOICE_MOD_DEST_VCA_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCvoiceModDestVCA, 127);
       midiCCOut(CCvoiceModDestVCA, 0);
     }
@@ -2465,7 +2466,7 @@ void updatephaserSW() {
   pot = false;
   if (phaserSW) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("      PHASER ON", "");
+      updateLoadingMessages("      PHASER ON", "");
     }
     sr.writePin(PHASER_LED, HIGH);
     midiCCOut(CCphaserSW, 127);
@@ -2473,7 +2474,7 @@ void updatephaserSW() {
   } else {
     sr.writePin(PHASER_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CCphaserSW, 127);
       midiCCOut(CCphaserSW, 0);
     }
@@ -2484,7 +2485,7 @@ void updatelfoDestFilter() {
   pot = false;
   if (lfoDestFilter) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("   LFO TO FILTER", "");
+      updateLoadingMessages("   LFO TO FILTER", "");
     }
     sr.writePin(LFO_DEST_FILTER_LED, HIGH);
     midiCCOut(CClfoDestFilter, 127);
@@ -2492,7 +2493,7 @@ void updatelfoDestFilter() {
   } else {
     sr.writePin(LFO_DEST_FILTER_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoDestFilter, 127);
       midiCCOut(CClfoDestFilter, 0);
     }
@@ -2503,7 +2504,7 @@ void updatelfoDestPW3() {
   pot = false;
   if (lfoDestPW3) {
     if (!recallPatchFlag) {
-      showCurrentParameterPage("     LFO TO PW3", "");
+      updateLoadingMessages("     LFO TO PW3", "");
     }
     sr.writePin(LFO_DEST_PW3_LED, HIGH);
     midiCCOut(CClfoDestPW3, 127);
@@ -2511,7 +2512,7 @@ void updatelfoDestPW3() {
   } else {
     sr.writePin(LFO_DEST_PW3_LED, LOW);
     if (!recallPatchFlag) {
-      showCurrentParameterPage("", "");
+      updateLoadingMessages("", "");
       midiCCOut(CClfoDestPW3, 127);
       midiCCOut(CClfoDestPW3, 0);
     }
